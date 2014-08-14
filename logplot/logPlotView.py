@@ -22,6 +22,7 @@ class LogPlot(QMainWindow, Ui_LogPlot):
         #Connect buttons
         self.ui.FileBrowseButton.clicked.connect(self.FileBrowse)
         self.ui.RecordButton.clicked.connect(self.Record)
+        self.ui.PlotExcelButton.clicked.connect(self.PlotExcel)
         self.ui.previewSummary.toggled.connect(self.PreviewSummary)
         self.ui.previewAll.toggled.connect(self.PreviewAll)
 
@@ -52,17 +53,22 @@ class LogPlot(QMainWindow, Ui_LogPlot):
         
     def FileBrowse(self):
         self.ui.filePath.setText(QFileDialog.getOpenFileName())
-        #TODO: verify that the file is a .csv file
+        if not self.FileNameValid(self.ui.filePath.text()): return
+        #By default, plot preview of summary when a file is opened
         self.ui.previewSummary.setChecked(True)
         self.PreviewSummary()
         
     def Record(self):
         records = []
         filename = self.ui.filePath.text()
+        if not self.FileNameValid(filename): return
+        self.controller.RecordDataFromFile(filename)
+
+    def FileNameValid(self, filename):
         if not filename or not filename.endswith('.csv'):
             #TODO: error dialog, must provide valid filename
-            return
-        self.controller.RecordDataFromFile(filename)
+            return False
+        else: return True
 
     def PreviewSummary(self):
         #get size of current figure and then clear
@@ -83,6 +89,21 @@ class LogPlot(QMainWindow, Ui_LogPlot):
         self.previewCanvas.figure.set_size_inches(figSize)
         #re-draw canvas
         self.previewCanvas.draw()
+
+    def PlotExcel(self):
+        #Get directory of save location
+        savePath = str(QFileDialog.getSaveFileName(self,
+                                                   "Choose save location",
+                                                   "untitled.xlsx",
+                                                   "Excel files (*xlsx)"))
+        if not savePath or not savePath.endswith('.xlsx'):
+            #TODO: handle bad save path
+            return
+        
+        #Plotting all records or just summary?
+        if self.ui.previewAll.isChecked(): self.controller.PlotTempsExcel(savePath)
+        elif self.ui.previewSummary.isChecked(): self.controller.PlotSummaryExcel(savePath)
+        else: return
         
         
         

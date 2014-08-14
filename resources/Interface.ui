@@ -20,7 +20,7 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="upload">
          <attribute name="title">
@@ -29,6 +29,12 @@
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="0" column="0">
            <widget class="QLineEdit" name="filePath">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Select path to .csv file</string>
+            </property>
             <property name="placeholderText">
              <string>Path to .csv file</string>
             </property>
@@ -79,6 +85,19 @@
                </property>
                <property name="text">
                 <string>Summary</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="PlotExcelButton">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>330</y>
+                 <width>81</width>
+                 <height>41</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Plot in Excel</string>
                </property>
               </widget>
              </widget>
@@ -201,12 +220,6 @@
            </layout>
           </item>
          </layout>
-         <zorder>label</zorder>
-         <zorder>beginDate</zorder>
-         <zorder>label_2</zorder>
-         <zorder>endDate</zorder>
-         <zorder>gridLayoutWidget_3</zorder>
-         <zorder>groupBox</zorder>
         </widget>
        </widget>
       </item>

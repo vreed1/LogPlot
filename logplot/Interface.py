@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Interface.ui'
 #
-# Created: Sun Aug 10 13:49:05 2014
+# Created: Sun Aug 10 20:03:56 2014
 #      by: PyQt4 UI code generator 4.11.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -40,6 +40,7 @@ class Ui_LogPlot(object):
         self.gridLayout_3 = QtGui.QGridLayout(self.upload)
         self.gridLayout_3.setObjectName(_fromUtf8("gridLayout_3"))
         self.filePath = QtGui.QLineEdit(self.upload)
+        self.filePath.setEnabled(False)
         self.filePath.setObjectName(_fromUtf8("filePath"))
         self.gridLayout_3.addWidget(self.filePath, 0, 0, 1, 1)
         self.FileBrowseButton = QtGui.QPushButton(self.upload)
@@ -58,6 +59,9 @@ class Ui_LogPlot(object):
         self.previewSummary = QtGui.QRadioButton(self.groupBox_2)
         self.previewSummary.setGeometry(QtCore.QRect(10, 60, 101, 20))
         self.previewSummary.setObjectName(_fromUtf8("previewSummary"))
+        self.PlotExcelButton = QtGui.QPushButton(self.groupBox_2)
+        self.PlotExcelButton.setGeometry(QtCore.QRect(10, 330, 81, 41))
+        self.PlotExcelButton.setObjectName(_fromUtf8("PlotExcelButton"))
         self.uploadLayout.addWidget(self.groupBox_2, 0, 0, 1, 1)
         self.gridLayout_3.addLayout(self.uploadLayout, 1, 0, 1, 3)
         self.tabWidget.addTab(self.upload, _fromUtf8(""))
@@ -122,17 +126,19 @@ class Ui_LogPlot(object):
         self.menubar.addAction(self.menu_File.menuAction())
 
         self.retranslateUi(LogPlot)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(LogPlot)
 
     def retranslateUi(self, LogPlot):
         LogPlot.setWindowTitle(_translate("LogPlot", "LogPlot", None))
+        self.filePath.setText(_translate("LogPlot", "Select path to .csv file", None))
         self.filePath.setPlaceholderText(_translate("LogPlot", "Path to .csv file", None))
         self.FileBrowseButton.setText(_translate("LogPlot", "Browse...", None))
         self.RecordButton.setText(_translate("LogPlot", "Add to Database", None))
         self.groupBox_2.setTitle(_translate("LogPlot", "Data Plot Preview", None))
         self.previewAll.setText(_translate("LogPlot", "All Records", None))
         self.previewSummary.setText(_translate("LogPlot", "Summary", None))
+        self.PlotExcelButton.setText(_translate("LogPlot", "Plot in Excel", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.upload), _translate("LogPlot", "Upload", None))
         self.label.setText(_translate("LogPlot", "Begin Date", None))
         self.label_2.setText(_translate("LogPlot", "End Date", None))

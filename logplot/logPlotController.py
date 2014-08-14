@@ -7,6 +7,7 @@ class Controller:
     def __init__(self):
         self.currentFile = ""
         self.tempRecords = []
+        self.graph = Grapher()
         
     def readRecords(self, filename):
         #Store name of file
@@ -28,13 +29,24 @@ class Controller:
         #Create summary
         summaryRecords = Utils.makeSummary(self.tempRecords)
         #figure should be reference to MatPlot figure
-        graph = Grapher()
-        return graph.plotSummaryPreview(summaryRecords)
+        return self.graph.plotSummaryPreview(summaryRecords)
 
     def PlotDetailedPreview(self, filename):
         if self.currentFile != filename:
             self.readRecords(filename)
         #figure should be reference to MatPlot figure
-        graph = Grapher()
-        return graph.plotTempPreview(self.tempRecords)
+        return self.graph.plotTempPreview(self.tempRecords)
+
+    def PlotTempsExcel(self, filename):
+        if not self.tempRecords:
+            #TODO: error, no records to plot
+            return
+        return self.graph.plotTempsExcel(filename, self.tempRecords)
+
+    def PlotSummaryExcel(self, filename):
+        if not self.tempRecords:
+            #TODO: error, no records to plot
+            return
+        summaryRecords = Utils.makeSummary(self.tempRecords)
+        return self.graph.plotTempSummaryExcel(filename, summaryRecords)
         
