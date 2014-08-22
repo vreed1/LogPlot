@@ -44,9 +44,10 @@ class Utils:
         #Get summaries for each date: minTemp, maxTemp, avgTemp
         for date in dates:
             dateRecords = [r for r in records if r.DateTime.date() == date]
-            minTemp = min(r.Temperature for r in dateRecords)
-            maxTemp = max(r.Temperature for r in dateRecords)
-            sumTemp = sum(r.Temperature for r in dateRecords)
+            temps = [r.Temperature for r in dateRecords]
+            minTemp = min(temps)
+            maxTemp = max(temps)
+            sumTemp = sum(temps)
             avgTemp = sumTemp/float(len(dateRecords))
             summaryRecords.append(TempSummaryRecord(date,minTemp,maxTemp,avgTemp))
 

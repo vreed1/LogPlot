@@ -7,26 +7,51 @@ import xlsxwriter as xl
 import datetime as dt
 
 class Grapher:
-    def plotTempPreview(self, tempRecords):      
-        x = [record.DateTime for (record) in tempRecords]
-        temps = {'Temperature': [record.Temperature for (record) in tempRecords]}
+    def extractSeriesFromRecords(self, tempRecords):
+        dates = []
+        temps = []
+        for record in tempRecords:
+            dates.append(record.DateTime)
+            temps.append(record.Temperature)
+        return {'dates':dates, 'Temperature': temps}
+
+    def extractSeriesFromSummaryRecords(self, tempSummaryRecords):
+        dates = []
+        maxTemp = []
+        minTemp = []
+        avgTemp = []
+        for record in tempSummaryRecords:
+            dates.append(record.Date)
+            maxTemp.append(record.MaxTemp)
+            minTemp.append(record.MinTemp)
+            avgTemp.append(record.AvgTemp)
+        return {'dates':dates, 'maxTemp':maxTemp, 'minTemp':minTemp, 'avgTemp':avgTemp}
+    
+    def plotTempPreview(self, tempRecords):
+        data = self.extractSeriesFromRecords(tempRecords)
         dateFormat = '%m/%d/%Y %H:%M'
-        return self.plotMatPlot(x, temps, dateFormat)
+        return self.plotMatPlot(data, dateFormat)
         
     def plotSummaryPreview(self, tempSummaryRecords):
-        x = [record.Date for (record) in tempSummaryRecords]
-        maxTemp = [record.MaxTemp for (record) in tempSummaryRecords]
-        minTemp = [record.MinTemp for (record) in tempSummaryRecords]
-        avgTemp = [record.AvgTemp for (record) in tempSummaryRecords]
-        ySeries = {'maxTemp':maxTemp, 'minTemp':minTemp, 'avgTemp':avgTemp}
+        data = self.extractSeriesFromSummaryRecords(tempSummaryRecords)
         dateFormat = '%m/%d/%Y'
-        return self.plotMatPlot(x, ySeries, dateFormat, addLegend = True)
+        return self.plotMatPlot(data, dateFormat, addLegend = True)
 
-    def plotMatPlot(self, x, ySeries, dateFormat, addLegend = False):
-        # 'x' expected to hold list of dates
-        # 'ySeries' expected to be a dictionary, where:
+    def plotTempsExcel(self, filename, tempRecords):
+        data = self.extractSeriesFromRecords(tempRecords)
+        dateFormat = 'mm/dd/yy hh:mm'
+        return self.plotExcel(filename, data, dateFormat)
+
+    def plotTempSummaryExcel(self, filename, tempSummaryRecords):
+        data = self.extractSeriesFromSummaryRecords(tempSummaryRecords)
+        dateFormat = 'mm/dd/yy'
+        return self.plotExcel(filename, data, dateFormat)
+    
+    def plotMatPlot(self, data, dateFormat, addLegend = False):
+        # 'data' expected to be a dictionary where:
         # key = series name
         # values = list of series values
+        # should contain a 'dates' key for the x series
         
         figure = plt.figure()
         graph = figure.add_subplot(1,1,1)
@@ -36,7 +61,9 @@ class Grapher:
         plt.gca().xaxis.set_major_locator(mdates.AutoDateLocator())
         
         #Plot the data series
-        for key, vals in ySeries.items():
+        x = data.pop('dates', None)
+        if not x: return
+        for key, vals in data.items():
             graph.plot(x, vals, label=key)
 
         #Add a legend if necessary
@@ -51,22 +78,6 @@ class Grapher:
         plt.gcf().autofmt_xdate()
 
         return figure
-
-    def plotTempsExcel(self, filename, tempRecords):
-        dates = [record.DateTime for (record) in tempRecords]
-        temps = [record.Temperature for (record) in tempRecords]
-        data = {'SampleDate':dates, 'Temperature':temps}
-        dateFormat = 'mm/dd/yy hh:mm'
-        return self.plotExcel(filename, data, dateFormat)
-
-    def plotTempSummaryExcel(self, filename, tempSummaryRecords):
-        dates = [record.Date for (record) in tempSummaryRecords]
-        maxTemp = [record.MaxTemp for (record) in tempSummaryRecords]
-        minTemp = [record.MinTemp for (record) in tempSummaryRecords]
-        avgTemp = [record.AvgTemp for (record) in tempSummaryRecords]
-        data = {'SampleDate':dates, 'MaxTemp':maxTemp, 'MinTemp':minTemp, 'AvgTemp':avgTemp}
-        dateFormat = 'mm/dd/yy'
-        return self.plotExcel(filename, data, dateFormat)
         
     def plotExcel(self, filename, data, dateformat):
         #Construct workbook, worksheet, chartsheet and chart
@@ -76,25 +87,27 @@ class Grapher:
         chart = workbook.add_chart({'type': 'scatter', 'subtype': 'straight'})
         dateFormat = workbook.add_format({'num_format': dateformat})
 
+        #Add dates to the first column of the worksheet
+        dates = data.pop('dates', None)
+        if not dates: return
+        numDates = len(dates)
+        worksheet.write(0, 0, 'Date')
+        worksheet.write_column(1, 0, dates, dateFormat)
+        
         #Add data to worksheet and get potential minimum values for y axis
         column = 1
-        numDates = len(data['SampleDate'])
         potentialMin = []
         for field, records in data.items():
-            if (field == 'SampleDate'):
-                worksheet.write(0, 0, 'Date')
-                worksheet.write_column(1,0,records, dateFormat)
-            else:
-                worksheet.write(0, column, field)
-                worksheet.write_column(1,column,records)
-                chart.add_series({
-                    'name': ['Sheet1', 0, column],
-                    'categories': ['Sheet1', 1, 0, numDates, 0],
-                    'values': ['Sheet1', 1, column, len(records), column],
-                    'marker': {'type': 'none'}
-                })
-                potentialMin.append(min(records))
-                column += 1
+            worksheet.write(0, column, field)
+            worksheet.write_column(1,column,records)
+            chart.add_series({
+                'name': ['Sheet1', 0, column],
+                'categories': ['Sheet1', 1, 0, numDates, 0],
+                'values': ['Sheet1', 1, column, len(records), column],
+                'marker': {'type': 'none'}
+            })
+            potentialMin.append(min(records))
+            column += 1
                 
 	#Add axis labels, set minimum value for y axis (rounded down to nearest 10)
         minY = min(potentialMin)
