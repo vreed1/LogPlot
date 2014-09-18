@@ -1,4 +1,3 @@
-import pypyodbc
 from datetime import datetime
 import csv
         

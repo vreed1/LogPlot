@@ -1,6 +1,7 @@
-from collections import defaultdict
-import pypyodbc
 import os
+import pypyodbc
+from collections import defaultdict
+from enum import Enum
 
 class dbTools:
     #Parameters for Access Database connection
@@ -54,26 +55,43 @@ class dbTools:
                 i += 1            
 
         return data
-        
+    
+class DailySummary():   
+    _tablename = ""
+    _dateformat = ""
+    _fields = None
+    def __init__(self):
+        DailySummary._tablename = 'DailySummary'
+        DailySummary._fields = Enum('Fields', 'SampleDate MaxTemp MinTemp AvgTemp')
+        DailySummary._dateformat = '%m/%d/%Y'
 
-class DailySummary:
-    #Parameters of daily summary
-    tableName = 'DailySummary'
-    fields = 'SampleDate, MaxTemp, MinTemp, AvgTemp'
+    @property
+    def TableName(self):
+        return DailySummary._tablename
+    @property
+    def Fields(self):
+        return DailySummary._fields
+    @property
+    def DateFormat(self):
+        return DailySummary._dateformat
 
-    @staticmethod
-    def insert(records):
+    #Returns a comma separated string of the desired field names (default all possible fields)
+    def GetStringOfFields(self, selectedFields = None):
+        if selectedFields is None:
+            return ','.join([field.name for field in self.Fields])
+        return ','.join([self.Fields(field).name for field in selectedFields])
+
+    def insert(self, records):
         values = []
         for record in records:
             dtString = record.Date.strftime('%m/%d/%y')
             values.append("'%s', %f, %f, %f" % (dtString, record.MaxTemp, record.MinTemp, record.AvgTemp))
         tools = dbTools()
-        tools.insert(DailySummary.tableName, DailySummary.fields, values)
+        tools.insert(self.TableName, self.GetStringOfFields(), values)
 
-    @staticmethod
-    def get(dateBegin, dateEnd, fieldsToQuery):
+    def get(self, dateBegin, dateEnd, fieldsToQuery):
         tools = dbTools()
-        data = tools.get(DailySummary.tableName, dateBegin, dateEnd, fieldsToQuery)
+        data = tools.get(self.TableName, dateBegin, dateEnd, fieldsToQuery)
         
         return data
             

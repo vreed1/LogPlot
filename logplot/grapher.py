@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -27,15 +26,18 @@ class Grapher:
             avgTemp.append(record.AvgTemp)
         return {'dates':dates, 'maxTemp':maxTemp, 'minTemp':minTemp, 'avgTemp':avgTemp}
     
-    def plotTempPreview(self, tempRecords):
+    def plotTemps(self, tempRecords):
         data = self.extractSeriesFromRecords(tempRecords)
         dateFormat = '%m/%d/%Y %H:%M'
-        return self.plotMatPlot(data, dateFormat)
+        return self.plotMatPlot('dates', data, dateFormat, 'Date', 'Temperature ($^\circ$F)')
         
-    def plotSummaryPreview(self, tempSummaryRecords):
+    def plotTempSummary(self, tempSummaryRecords):
         data = self.extractSeriesFromSummaryRecords(tempSummaryRecords)
         dateFormat = '%m/%d/%Y'
-        return self.plotMatPlot(data, dateFormat, addLegend = True)
+        return self.plotMatPlot('dates', data, dateFormat, 'Date', 'Temperature ($^\circ$F)', addLegend = True)
+
+    def plotTempsFromDictionary(self, xSeriesName, data, dateFormat):
+        return self.plotMatPlot(xSeriesName, data, dateFormat, 'Date', 'Temperature ($^\circ$F)', addLegend = True)
 
     def plotTempsExcel(self, filename, tempRecords):
         data = self.extractSeriesFromRecords(tempRecords)
@@ -47,11 +49,11 @@ class Grapher:
         dateFormat = 'mm/dd/yy'
         return self.plotExcel(filename, data, dateFormat)
     
-    def plotMatPlot(self, data, dateFormat, addLegend = False):
+    def plotMatPlot(self, xSeriesName, data, dateFormat, xLabel, yLabel, addLegend = False):
         # 'data' expected to be a dictionary where:
         # key = series name
         # values = list of series values
-        # should contain a 'dates' key for the x series
+        # xSeriesName should match name of key for the x-axis series
         
         figure = plt.figure()
         graph = figure.add_subplot(1,1,1)
@@ -61,7 +63,7 @@ class Grapher:
         plt.gca().xaxis.set_major_locator(mdates.AutoDateLocator())
         
         #Plot the data series
-        x = data.pop('dates', None)
+        x = data.pop(xSeriesName, None)
         if not x: return
         for key, vals in data.items():
             graph.plot(x, vals, label=key)
@@ -72,8 +74,8 @@ class Grapher:
             graph.legend(handles,labels)
 
         #Add axis labels
-        plt.xlabel('Date')
-        plt.ylabel('Temperature ($^\circ$F)')
+        plt.xlabel(xLabel)
+        plt.ylabel(yLabel)
         
         plt.gcf().autofmt_xdate()
 

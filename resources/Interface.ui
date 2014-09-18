@@ -111,25 +111,6 @@
           <string>Plot</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_5">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label">
-            <property name="maximumSize">
-             <size>
-              <width>182</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Begin Date</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QDateEdit" name="beginDate"/>
-          </item>
           <item row="0" column="2">
            <widget class="QLabel" name="label_2">
             <property name="text">
@@ -140,10 +121,10 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QDateEdit" name="endDate"/>
+          <item row="0" column="1">
+           <widget class="QDateEdit" name="beginDate"/>
           </item>
-          <item row="1" column="0" colspan="4">
+          <item row="2" column="0" colspan="6">
            <layout class="QGridLayout" name="plotLayout">
             <item row="0" column="0">
              <widget class="QGroupBox" name="groupBox">
@@ -206,7 +187,7 @@
                <property name="geometry">
                 <rect>
                  <x>10</x>
-                 <y>200</y>
+                 <y>370</y>
                  <width>93</width>
                  <height>28</height>
                 </rect>
@@ -215,9 +196,182 @@
                 <string>Plot</string>
                </property>
               </widget>
+              <widget class="QGroupBox" name="waterLevelParameters">
+               <property name="geometry">
+                <rect>
+                 <x>30</x>
+                 <y>140</y>
+                 <width>131</width>
+                 <height>191</height>
+                </rect>
+               </property>
+               <property name="title">
+                <string/>
+               </property>
+               <widget class="QComboBox" name="Units">
+                <property name="geometry">
+                 <rect>
+                  <x>10</x>
+                  <y>30</y>
+                  <width>111</width>
+                  <height>22</height>
+                 </rect>
+                </property>
+                <property name="toolTip">
+                 <string/>
+                </property>
+                <property name="whatsThis">
+                 <string/>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Feet</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Meters</string>
+                 </property>
+                </item>
+               </widget>
+               <widget class="QLabel" name="label_3">
+                <property name="geometry">
+                 <rect>
+                  <x>10</x>
+                  <y>10</y>
+                  <width>53</width>
+                  <height>16</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Units</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="label_4">
+                <property name="geometry">
+                 <rect>
+                  <x>10</x>
+                  <y>70</y>
+                  <width>53</width>
+                  <height>16</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Datum</string>
+                </property>
+               </widget>
+               <widget class="QComboBox" name="Datum">
+                <property name="geometry">
+                 <rect>
+                  <x>10</x>
+                  <y>90</y>
+                  <width>111</width>
+                  <height>22</height>
+                 </rect>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>MHHW</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>MHW</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>MTL</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>MSL</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>MLW</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>MLLW</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>NAVD</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>STND</string>
+                 </property>
+                </item>
+               </widget>
+              </widget>
+              <zorder>MinTempCheck</zorder>
+              <zorder>MaxTempCheck</zorder>
+              <zorder>AvgTempCheck</zorder>
+              <zorder>WaterLevelCheck</zorder>
+              <zorder>plotButton</zorder>
+              <zorder>waterLevelParameters</zorder>
+              <zorder>label</zorder>
+              <zorder>beginDate</zorder>
+              <zorder>label_2</zorder>
+              <zorder>endDate</zorder>
              </widget>
             </item>
            </layout>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="maximumSize">
+             <size>
+              <width>182</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Begin Date</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QDateEdit" name="endDate"/>
+          </item>
+          <item row="0" column="5">
+           <widget class="QComboBox" name="PlotInterval">
+            <item>
+             <property name="text">
+              <string>Daily</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Monthly</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Year</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Interval</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

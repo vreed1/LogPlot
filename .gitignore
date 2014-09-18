@@ -3,3 +3,4 @@
 *.accdb
 
 testData/
+dist/

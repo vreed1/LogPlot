@@ -1,10 +1,7 @@
-import sys
 import matplotlib.pyplot as plt
-from datetime import datetime
 from PyQt4.QtGui import QApplication, QMainWindow, QFileDialog, QVBoxLayout
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
-from logPlotController import *
 from Interface import Ui_LogPlot
 
 class LogPlot(QMainWindow, Ui_LogPlot):
@@ -45,15 +42,15 @@ class LogPlot(QMainWindow, Ui_LogPlot):
         plot.addWidget(toolbar)
         return plot
 
-    def UpdatePreviewCanvas(self, figure):
+    def UpdateCanvas(self, canvas, figure):
         #get size of current figure and then clear
-        figSize = self.previewCanvas.figure.get_size_inches()
-        self.previewCanvas.figure.clf()
+        figSize = canvas.figure.get_size_inches()
+        canvas.figure.clf()
         #get new figure and adjust size
-        self.previewCanvas.figure = figure
-        self.previewCanvas.figure.set_size_inches(figSize)
+        canvas.figure = figure
+        canvas.figure.set_size_inches(figSize)
         #re-draw canvas
-        self.previewCanvas.draw()
+        canvas.draw()
 
     def FileBrowseDialog(self):
         return QFileDialog.getOpenFileName()
