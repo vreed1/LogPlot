@@ -80,7 +80,45 @@ class Grapher:
         plt.gcf().autofmt_xdate()
 
         return figure
+
+    def plotMatPlotDualYAxis(self, xSeriesName, dataY1, dataY2, dateFormat, xLabel, yLabel1, yLabel2):
+        figure = plt.figure()
         
+        #Format the x axis
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter(dateFormat))
+        plt.gca().xaxis.set_major_locator(mdates.AutoDateLocator())
+
+        x1 = dataY1.pop(xSeriesName, None)
+        if not x1: return
+        x2 = dataY2.pop(xSeriesName, None)
+        if not x2: return
+        if not x1 == x2: return
+        
+        #Plot the first set of data
+        ax1 = figure.add_subplot(1,1,1)
+        ax1.set_xlabel(xLabel)
+        ax1.set_ylabel(yLabel1)
+        for key, vals in dataY1.items():
+            ax1.plot(x1, vals, label=key)
+
+        #Plot the second set of data
+        ax2 = ax1.twinx()
+        ax2.set_ylabel(yLabel2)
+        #Prevent lines of duplicate color: make the ax2 color cycle start where ax1 left off
+        ax2._get_lines.color_cycle = ax1._get_lines.color_cycle
+        for key, vals in dataY2.items():
+            ax2.plot(x2, vals, label=key)
+
+        #Add a legend
+        handles1, labels1 = ax1.get_legend_handles_labels()
+        handles2, labels2 = ax2.get_legend_handles_labels()
+        ax1.legend(handles1+handles2,labels1+labels2)
+
+        plt.gcf().autofmt_xdate()
+
+        return figure
+
+            
     def plotExcel(self, filename, data, dateformat):
         #Construct workbook, worksheet, chartsheet and chart
         workbook = xl.Workbook(filename)

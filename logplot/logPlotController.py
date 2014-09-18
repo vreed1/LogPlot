@@ -90,15 +90,20 @@ class Controller:
             levels = self.MakeTideRequest(beginDate, endDate, interval,
                                           self.view.ui.Units.currentIndex(),
                                           str(self.view.ui.Datum.currentText()))
-        
-        #xSeries = self.dbSummary.Fields.SampleDate.name
-        #dateFormat = self.dbSummary.DateFormat
+            figure = self.graph.plotMatPlotDualYAxis('SampleDate', data, levels, '%m/%d/%Y', 'Date',
+                                                     'Temp', 'Water Level')
+            self.view.UpdateCanvas(self.view.plotCanvas, figure)
+        else:
+            xSeries = self.dbSummary.Fields.SampleDate.name
+            dateFormat = self.dbSummary.DateFormat
+            figure = self.graph.plotTempsFromDictionary(xSeries, data, dateFormat)
+            self.view.UpdateCanvas(self.view.plotCanvas, figure)
         
         #figure = self.graph.plotTempsFromDictionary(xSeries, data, dateFormat)
-        figure = self.graph.plotMatPlot('dates', levels, '%Y-%m-%d', 'Date', 'Level')
+        #figure = self.graph.plotMatPlot('dates', levels, '%Y-%m-%d', 'Date', 'Level')
 
         #Update canvas
-        self.view.UpdateCanvas(self.view.plotCanvas, figure)
+        #self.view.UpdateCanvas(self.view.plotCanvas, figure)
 
 #-----------------Helper Methods--------------------- 
     

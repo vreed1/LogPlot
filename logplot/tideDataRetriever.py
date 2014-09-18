@@ -72,10 +72,12 @@ class TideDataRetriever:
             for record in data:
                 dateRecs.append(self.getDate(record['t']).date())
                 waterlevels.append(float(record['v']))
-        return {'dates':dateRecs, 'levels':waterlevels}
+        return {'SampleDate':dateRecs, 'levels':waterlevels}
 
     def getDate(self, dateStr):
-        return datetime.strptime(dateStr, '%Y-%m-%d %H:%M')
+        d1 = datetime.strptime(dateStr, '%Y-%m-%d %H:%M')
+        d2 = datetime.strftime(d1, '%m/%d/%Y %H:%M')
+        return datetime.strptime(d2, '%m/%d/%Y %H:%M')
 
     def getMatPlotDict(self, data):
         dates = []

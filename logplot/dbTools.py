@@ -92,7 +92,7 @@ class DailySummary():
     def get(self, dateBegin, dateEnd, fieldsToQuery):
         tools = dbTools()
         data = tools.get(self.TableName, dateBegin, dateEnd, fieldsToQuery)
-        
+        data['SampleDate'] = [x.date() for x in data['SampleDate']]
         return data
             
     

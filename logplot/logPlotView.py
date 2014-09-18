@@ -43,6 +43,10 @@ class LogPlot(QMainWindow, Ui_LogPlot):
         return plot
 
     def UpdateCanvas(self, canvas, figure):
+        #if the figure is null, just clear canvas
+        if not figure:
+            self.ClearCanvas(canvas, figure)
+            return
         #get size of current figure and then clear
         figSize = canvas.figure.get_size_inches()
         canvas.figure.clf()
@@ -50,6 +54,10 @@ class LogPlot(QMainWindow, Ui_LogPlot):
         canvas.figure = figure
         canvas.figure.set_size_inches(figSize)
         #re-draw canvas
+        canvas.draw()
+
+    def ClearCanvas(self, canvas, figure):
+        canvas.figure.clf()
         canvas.draw()
 
     def FileBrowseDialog(self):
